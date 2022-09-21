@@ -1,23 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react'
+import Play from 'containers/Play';
 
-function App() {
+const App = () => {
+  // stop, start
+  const [status, setStatus] = useState("stop");
+
+  const handlePlay = () => {
+    setStatus("start")
+  }
+
+  const handleEscape = () => {
+    setStatus("stop")
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.keyCode === 13 && status === "stop") {
+      handlePlay()
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  });
+
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {
+        status === "start" ? <>
+          <Play onEsc={handleEscape} />
+        </> : <>
+          <div>
+            <button onClick={handlePlay} className="btn">Play</button>
+          </div>
+          <div className="hint">
+            <span>
+              Nhấn phím Enter
+            </span>
+          </div>
+        </>
+      }
+      
     </div>
   );
 }
